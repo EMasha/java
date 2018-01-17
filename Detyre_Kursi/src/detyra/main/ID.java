@@ -4,6 +4,6 @@ package detyra.main;
 
 public enum ID {
 	Player(),
-	Enemy();
+	basicEnemy();	
 
 }

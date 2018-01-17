@@ -19,30 +19,30 @@ public class KeyInput extends KeyAdapter{
 			
 			if(tempObject.getId() == ID.Player) {
 				//te gjithe eventet per objketin palyer
-				if(key == KeyEvent.VK_W) tempObject.setVelY(-1);
-				if(key == KeyEvent.VK_S) tempObject.setVelY(1);
-				if(key == KeyEvent.VK_D) tempObject.setVelX(1);
-				if(key == KeyEvent.VK_A) tempObject.setVelX(-1);
+				if(key == KeyEvent.VK_W) tempObject.setVelY(-5);
+				if(key == KeyEvent.VK_S) tempObject.setVelY(5);
+				if(key == KeyEvent.VK_D) tempObject.setVelX(5);
+				if(key == KeyEvent.VK_A) tempObject.setVelX(-5);
 			}
 		}
+		if(key == KeyEvent.VK_ESCAPE) System.exit(1);
 	}
-	public void relesePressed(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {
 		//gjenerohet kodi i butonit qe shtypim ne tastjere
 		int key = e.getKeyCode();
 		//krijon nje cikel i cili kontrollon nese ka ID e player do te beje levizjen e objektit
-		System.out.println(key);
+
 		for(int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
 			
 			if(tempObject.getId() == ID.Player) {
 				//te gjithe eventet per objketin palyer
-				if(key == KeyEvent.VK_W) tempObject.setVelY(-1);
-				if(key == KeyEvent.VK_S) tempObject.setVelY(1);
-				if(key == KeyEvent.VK_D) tempObject.setVelX(1);
-				if(key == KeyEvent.VK_A) tempObject.setVelX(-1);
+				if(key == KeyEvent.VK_W) tempObject.setVelY(0);
+				if(key == KeyEvent.VK_S) tempObject.setVelY(0);
+				if(key == KeyEvent.VK_D) tempObject.setVelX(0);
+				if(key == KeyEvent.VK_A) tempObject.setVelX(0);
 			}
 		}
 	}
-
 
 }

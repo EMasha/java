@@ -16,18 +16,24 @@ public class Loja extends Canvas implements Runnable{
 	public Thread thread;
 	private boolean running = false;
 	private Handler handler;
-
+	private Random r;
+	private HUD hud;
 	
 	//krijohet dritarja me permasen nje titull dhe varibli this qe ti referohet kesaj
 	public Loja() {
 		handler = new Handler();
 		//merr funksionin nga tastjera
 		this.addKeyListener(new KeyInput(handler));
+		
+		
 		new Window(WIDTH, HEIGHT, "Loja v.1", this);
-
+		hud = new HUD();
+		
+		r = new Random();
 		// gjithmone objektet duhet te jene posht hendler i cili therret GameObject
-		handler.addObject(new Player(100, 100, ID.Player));//brenda kllapave jane 3 parametrat x, y, ID
-		handler.addObject(new Player(200, 100, ID.Enemy));
+		handler.addObject(new Player(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.Player));//brenda kllapave jane 3 parametrat x, y, ID
+		for(int i = 0; i<3; i++) 
+		handler.addObject(new BasicEnemy(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.basicEnemy));
 	}
 	public synchronized void start() {
 		thread = new Thread(this);
@@ -46,6 +52,7 @@ public class Loja extends Canvas implements Runnable{
 	
 	// permban funksionet te cilat e bejne lojen te funksionoje
 	public void run() {
+		this.requestFocus();
 		//cdo loje ka nevoje per nje loop
 		long lastTime = System.nanoTime();// get current time to the nanosecond
 		double amountOfTicks = 60.0; // set the number of ticks 
@@ -86,6 +93,7 @@ public class Loja extends Canvas implements Runnable{
 	private void tick() {
 		//therrasim metoden tick nga klasa Handler
 		handler.tick();
+		hud.tick();
 	}
 	
 	private void render() {
@@ -99,10 +107,25 @@ public class Loja extends Canvas implements Runnable{
 		g.setColor(Color.black);
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
+
 		handler.render(g);
+		
+		hud.render(g);
 		
 		g.dispose();
 		bs.show();
+	}
+	
+	//metoda e cila nuk do te lejoje player te dale jashte kornizes
+	// variabli var do te marri vlerat e x dhe y
+	// variabli max eshte per WIDTH dhe HEIGHT
+	public static int clamp(int var, int min, int max) {
+		if(var >= max)
+			return var = max;
+		else if(var <= min)
+			return var = min;
+		else
+			return var;
 	}
 
 	public static void main(String[] args) {
