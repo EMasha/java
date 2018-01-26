@@ -3,17 +3,19 @@ package detyra.main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class HardSmartEnemy extends GameObject{
 	private Random r = new Random();
 	private GameObject player;
-	
+	private BufferedImage hardSmartEnemy_image;
 	public HardSmartEnemy(float x, float y, ID id,Handler handler) {
 		
 		super( x,  y, id);
 		
-		
+		SpriteSheet ss = new SpriteSheet(Loja.sprite_sheet);
+		hardSmartEnemy_image = ss.grabImage(2, 1, 32, 32);
 
 		
 		//kerkon per vendodhjen e objektit tone
@@ -46,8 +48,9 @@ public class HardSmartEnemy extends GameObject{
 
 
 	public void render(Graphics g) {
-		g.setColor(Color.cyan);
-		g.fillRect((int)x, (int)y, 16, 16);
+		//g.setColor(Color.cyan);
+		//g.fillRect((int)x, (int)y, 16, 16);
+		g.drawImage(hardSmartEnemy_image, (int) x, (int) y, null);
 		
 	}
 }

@@ -3,15 +3,19 @@ package detyra.main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 public class HardBossEnemy extends GameObject{
 	private GameObject player;
+	private BufferedImage hardBossEnemy_image;
 	public HardBossEnemy(float x, float y, ID id,Handler handler) {
 		
 		super( x,  y, id);
 		
 		velX = 5;
 		velY = 5;
+		SpriteSheet ss = new SpriteSheet(Loja.sprite_sheet);
+		hardBossEnemy_image = ss.grabImage(1, 3, 64, 64);
 		
 		//kerkon per vendodhjen e objektit tone
 		for(int i = 0; i < handler.object.size(); i++) {
@@ -43,8 +47,9 @@ public class HardBossEnemy extends GameObject{
 
 
 	public void render(Graphics g) {
-		g.setColor(Color.gray);
-		g.fillRect((int)x, (int)y, 64, 64);
+		//g.setColor(Color.gray);
+		//g.fillRect((int)x, (int)y, 64, 64);
+		g.drawImage(hardBossEnemy_image, (int) x, (int) y, null);
 		
 	}
 }
