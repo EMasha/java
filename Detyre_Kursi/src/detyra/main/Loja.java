@@ -3,9 +3,17 @@ package detyra.main;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+import java.io.IOException;
+
+import detyra.main.Loja.STATE;
 
 public class Loja extends Canvas implements Runnable{
 
@@ -13,27 +21,70 @@ public class Loja extends Canvas implements Runnable{
 
 	//Permasat e dritares ne ratio 12:9
 	public static final int WIDTH = 640, HEIGHT = WIDTH/12*9;
+
+	
 	public Thread thread;
 	private boolean running = false;
 	private Handler handler;
 	private Random r;
+
 	private HUD hud;
+	private NextLevel nextLevel;
+	private Menu menu;
+	public static boolean paused = false;
+	public static int veshtiresia = 0;
+	
+	//0 --> normale
+	//1 --> veshtire
+	
+	public enum STATE{
+		Menu,
+		Ndihme,
+		Select,
+		Fund,
+		Niveli,
+		Fitore,
+		Loja,
+	};
+	public static STATE gameState = STATE.Menu;
+	
+	public static BufferedImage sprite_sheet = null;
+
+	
 	
 	//krijohet dritarja me permasen nje titull dhe varibli this qe ti referohet kesaj
 	public Loja() {
+		BufferImageLoader loader = new BufferImageLoader();
+				
+		
+		sprite_sheet = loader.loadImage("/spreed-sheet.png");
+		System.out.println("loaded");
+		
+
 		handler = new Handler();
+		hud = new HUD();
+		menu = new Menu(this, handler, hud);
 		//merr funksionin nga tastjera
-		this.addKeyListener(new KeyInput(handler));
+		this.addKeyListener(new KeyInput(handler, this));
+		this.addMouseListener(menu);
 		
 		
 		new Window(WIDTH, HEIGHT, "Loja v.1", this);
-		hud = new HUD();
+		
+		
+		
+		nextLevel = new NextLevel(handler, hud);
 		
 		r = new Random();
-		// gjithmone objektet duhet te jene posht hendler i cili therret GameObject
-		handler.addObject(new Player(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.Player));//brenda kllapave jane 3 parametrat x, y, ID
-		for(int i = 0; i<3; i++) 
-		handler.addObject(new BasicEnemy(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.basicEnemy));
+		
+		if(gameState == STATE.Loja) {
+			// gjithmone objektet duhet te jene posht hendler i cili therret GameObject
+			handler.addObject(new Player(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.Player, handler));
+			handler.addObject(new ObjectiveObject(r.nextInt(WIDTH/2-32), r.nextInt(HEIGHT/2-32), ID.objectiveObject, handler));//brenda kllapave jane 3 parametrat x, y, ID
+			for(int i = 0; i<3; i++) 
+				handler.addObject(new HardBasicEnemy(r.nextInt(WIDTH/2-32), r.nextInt(HEIGHT/2-32), ID.hardBasicEnemy));
+			
+		}
 	}
 	public synchronized void start() {
 		thread = new Thread(this);
@@ -92,8 +143,35 @@ public class Loja extends Canvas implements Runnable{
 	
 	private void tick() {
 		//therrasim metoden tick nga klasa Handler
-		handler.tick();
-		hud.tick();
+		
+		if(gameState == STATE.Loja) {
+			if(!paused) {
+				hud.tick();
+				nextLevel.tick();
+				handler.tick();
+				if(HUD.HEALTH <= 0){
+					HUD.HEALTH = 100;
+					gameState = STATE.Fund;
+					handler.clearAll();
+					
+				}else if(HUD.piket >=100) {
+					handler.tick();
+					handler.clearNiveli();
+					gameState = STATE.Niveli;
+					
+									
+				}/*else if(gameState == STATE.Fitore){
+					handler.tick();
+					handler.clearFitore();
+				}*/
+			}
+			
+		}else if(gameState == STATE.Menu || gameState == STATE.Niveli || gameState == STATE.Fund || gameState == STATE.Select) {
+			menu.tick();
+			handler.tick();
+			handler.clearFitore();
+		}
+		
 	}
 	
 	private void render() {
@@ -104,13 +182,33 @@ public class Loja extends Canvas implements Runnable{
 		}
 		
 		Graphics g = bs.getDrawGraphics();
-		g.setColor(Color.black);
-		g.fillRect(0,0,WIDTH,HEIGHT);
+
+		//g.setColor(Color.black);
+		g.fillRect((int)0,(int)0,WIDTH,HEIGHT);
+		
 		
 
 		handler.render(g);
 		
-		hud.render(g);
+		
+		if(gameState == STATE.Loja) {
+			hud.render(g);
+		}else if(gameState == STATE.Menu || gameState == STATE.Ndihme|| gameState == STATE.Niveli|| gameState == STATE.Fund|| gameState == STATE.Select) {
+			menu.render(g);
+		}
+		if(paused) {
+			
+			Font fnt2 = new Font("arial", 1, 30);	
+			g.setFont(fnt2);
+			g.setColor(Color.white);
+			g.drawString("PAUSED", 270, 100);
+			
+			Font fnt3 = new Font("arial", 1, 12);	
+			g.setFont(fnt3);
+			g.setColor(Color.white);
+			g.drawString("Shtypni P per te filluar", 270, 120);
+		}
+		
 		
 		g.dispose();
 		bs.show();
@@ -119,7 +217,7 @@ public class Loja extends Canvas implements Runnable{
 	//metoda e cila nuk do te lejoje player te dale jashte kornizes
 	// variabli var do te marri vlerat e x dhe y
 	// variabli max eshte per WIDTH dhe HEIGHT
-	public static int clamp(int var, int min, int max) {
+	public static float clamp(float var, float min, float max) {
 		if(var >= max)
 			return var = max;
 		else if(var <= min)
