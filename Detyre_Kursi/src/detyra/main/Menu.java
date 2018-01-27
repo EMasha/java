@@ -28,13 +28,6 @@ public class Menu extends MouseAdapter{
 			//ketu therritet metoda e cila kontrollon mausin ne momentin e klikimit
 			//metoda e butonit luaj
 			if (mouseOver(mx, my, 210, 150, 200, 64)) {
-				//loja.gameState = STATE.Loja;
-				
-				//handler.addObject(new Player(r.nextInt(loja.WIDTH), r.nextInt(loja.HEIGHT), ID.Player, handler));
-				//handler.addObject(new ObjectiveObject(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.objectiveObject, handler));//brenda kllapave jane 3 parametrat x, y, ID
-		
-				//for(int i = 0; i<3; i++) 
-				//handler.addObject(new BasicEnemy(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.basicEnemy));
 				loja.gameState = STATE.Select;
 				return;
 
@@ -94,22 +87,51 @@ public class Menu extends MouseAdapter{
 		//butoni provo perseri
 		if(loja.gameState == STATE.Fund) {
 			if(mouseOver(mx, my, 350, 350,200, 64)) {
-				loja.gameState = STATE.Loja;
+				loja.gameState = STATE.Menu;
 				hud.setPlanet(1);
 				hud.piket(0);
-				handler.addObject(new Player(r.nextInt(loja.WIDTH), r.nextInt(loja.HEIGHT), ID.Player, handler));
+				/*handler.addObject(new Player(r.nextInt(loja.WIDTH), r.nextInt(loja.HEIGHT), ID.Player, handler));
 				handler.addObject(new ObjectiveObject(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.objectiveObject, handler));//brenda kllapave jane 3 parametrat x, y, ID
 		
 				for(int i = 0; i<3; i++) 
-				handler.addObject(new BasicEnemy(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.basicEnemy));
+				handler.addObject(new BasicEnemy(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.basicEnemy));*/
 			}
 		}
 		
 		
 		if(loja.gameState == STATE.Niveli) {
+			if(hud.getPlanet() == 1) {
+				if(mouseOver(mx, my, 210, 150, 200, 64)) {
+					loja.gameState = STATE.Pergjigja;
+					return;
+				} else {
+					loja.gameState = STATE.Pergjigja_gabuar;
+					return;
+				}
+			}else if(hud.getPlanet() == 2) {
+				if(mouseOver(mx, my, 210, 250, 200, 64)) {
+					loja.gameState = STATE.Pergjigja;
+					return;
+				}else {
+					loja.gameState = STATE.Pergjigja_gabuar;
+					return;
+				}
+			}else if(hud.getPlanet() == 3) {
+				if(mouseOver(mx, my, 210, 350, 200, 64)) {
+					loja.gameState = STATE.Pergjigja;
+					return;
+				}else {
+					loja.gameState = STATE.Pergjigja_gabuar;
+					return;
+				}
+			}
+			
+		}
+		if(loja.gameState == STATE.Pergjigja) {
 			if(mouseOver(mx, my, 350, 350,200, 64)) {
 				loja.paused = false;
 				loja.gameState = STATE.Loja;
+				hud.HEALTH += 100;
 				handler.addObject(new Player(r.nextInt(loja.WIDTH), r.nextInt(loja.HEIGHT), ID.Player, handler));
 				handler.addObject(new ObjectiveObject(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.objectiveObject, handler));//brenda kllapave jane 3 parametrat x, y, ID
 		
@@ -117,24 +139,33 @@ public class Menu extends MouseAdapter{
 				handler.addObject(new BasicEnemy(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.basicEnemy));
 				if(hud.planeti == 3) {
 					if(mouseOver(mx, my, 350, 350,200, 64)) {
-						//loja.gameState = STATE.Fitore;
-						handler.clearFitore();
-						if(mouseOver(mx, my, 350, 350,200, 64)) {
-							//loja.gameState = STATE.Fitore;
-							loja.paused = false;
-							hud.setPlanet(1);
-							hud.piket(0);
-							if(mouseOver(mx, my, 350, 350,200, 64)) {
-								loja.gameState = STATE.Menu;
-							}
-							
-						}
+						hud.piket += 50;
+						loja.gameState = STATE.Fund;
+
 					}
 				}
-								
 			}
-			
 		}
+		if(loja.gameState == STATE.Pergjigja_gabuar) {
+			if(mouseOver(mx, my, 350, 350,200, 64)) {
+				loja.paused = false;
+				loja.gameState = STATE.Loja;
+				
+				handler.addObject(new Player(r.nextInt(loja.WIDTH), r.nextInt(loja.HEIGHT), ID.Player, handler));
+				handler.addObject(new ObjectiveObject(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.objectiveObject, handler));//brenda kllapave jane 3 parametrat x, y, ID
+		
+				for(int i = 0; i<3; i++) 
+				handler.addObject(new BasicEnemy(r.nextInt(loja.WIDTH/2-32), r.nextInt(loja.HEIGHT/2-32), ID.basicEnemy));
+				if(hud.planeti == 3) {
+					if(mouseOver(mx, my, 350, 350,200, 64)) {
+						
+						loja.gameState = STATE.Fund;
+
+					}
+				}
+			}
+		}
+	
 	}
 	public void mouseReleased(MouseEvent e) {
 		
@@ -231,108 +262,38 @@ public class Menu extends MouseAdapter{
 			g.setColor(Color.white);
 			g.drawRect(210, 350,200, 64);
 		}else if(loja.gameState == STATE.Fund){
-			Font fnt = new Font("arial", 1, 50);
-			Font fnt3 = new Font("arial", 1, 20);
-			
-			
-			g.setFont(fnt);
-			Font fnt2 = new Font("arial", 1, 30);
-			g.setColor(Color.white);
-			g.drawString("Game Over", 150, 70);
-			g.setFont(fnt3);
-			g.drawString("Ju humbet ne planetin " + hud.getPlanet() +". Piket e tua: " + (hud.getScore() + ((hud.getPlanet()-1)*100)), 30, 150);
-			
-			
-			
-			g.setFont(fnt2);
-			g.setColor(Color.white);
-			g.drawString("Provo serisht", 355, 390);
-			g.setColor(Color.white);
-			g.drawRect(350, 350,200, 64);
-		
-		}/*else if(loja.gameState == STATE.Fitore){
-			Font fnt = new Font("arial", 1, 50);
-			Font fnt3 = new Font("arial", 1, 20);
-			
-			
-			g.setFont(fnt);
-			Font fnt2 = new Font("arial", 1, 30);
-			g.setColor(Color.white);
-			g.drawString("Game Over", 200, 70);
-			g.setFont(fnt3);
-			g.drawString("Ju Fituat. Piket e tua: " + (hud.getScore() + ((hud.getPlanet()-1)*100)), 30, 150);
-			
-			
-			
-			g.setFont(fnt2);
-			g.setColor(Color.white);
-			g.drawString("Menu", 355, 390);
-			g.setColor(Color.white);
-			g.drawRect(350, 350,200, 64);
-		
-		}*/else if(loja.gameState == STATE.Niveli){
-			Font fnt = new Font("arial", 1, 50);
-			Font fnt3 = new Font("arial", 1, 20);
-			
-			if(hud.getPlanet() == 1) {
+			if((hud.getScore() + ((hud.getPlanet()-1)*100) <= 299)) {
+				Font fnt = new Font("arial", 1, 50);
+				Font fnt3 = new Font("arial", 1, 20);
+				
+				
 				g.setFont(fnt);
 				Font fnt2 = new Font("arial", 1, 30);
 				g.setColor(Color.white);
-				g.drawString("Planeti Mars", 150, 70);
+				g.drawString("Game Over", 150, 70);
 				g.setFont(fnt3);
-				g.drawString("Distanca: 227,940,000 km (1.52 AU) Nga Dielli", 15, 150);
-				g.drawString("Distanca: 58.000.000 Km deri ne 402.000.000 km nga Toka", 15, 200);
-				g.drawString("Diametri: 6,794 km", 15, 250);
-				g.drawString("Masa: 6.4219e23 kg", 15, 300);
+				g.drawString("Ju humbet ne planetin " + hud.getPlanet() +". Piket e tua: " + (hud.getScore() + ((hud.getPlanet()-1)*100)), 30, 150);
 				
-			
+				
+				
 				g.setFont(fnt2);
 				g.setColor(Color.white);
-				g.drawString("Planeti tjeter", 360, 390);
+				g.drawString("Provo serisht", 355, 390);
 				g.setColor(Color.white);
 				g.drawRect(350, 350,200, 64);
-			} else if(hud.getPlanet() == 2) {
+			}else if((hud.getScore() + ((hud.getPlanet()-1)*100) >= 300)) {
+				Font fnt = new Font("arial", 1, 50);
+				Font fnt3 = new Font("arial", 1, 20);
+				
+				
 				g.setFont(fnt);
 				Font fnt2 = new Font("arial", 1, 30);
 				g.setColor(Color.white);
-				g.drawString("Planeti Saturn", 150, 70);
+				g.drawString("Game Over", 200, 70);
 				g.setFont(fnt3);
-				g.drawString("Numri i hënave: 61", 15, 150);
-				g.drawString("Diametri:	120.536 ±8 km (ekuator)", 15, 200);
-				g.drawString("Sipërfaqja: 1 / 10,21", 15, 250);
-				g.drawString("Masa: 5,685×1026 kg", 15, 300);
-				
-			
-				g.setFont(fnt2);
-				g.setColor(Color.white);
-				g.drawString("Planeti tjeter", 360, 390);
-				g.setColor(Color.white);
-				g.drawRect(350, 350,200, 64);
-			}else if(hud.getPlanet() == 3) {
-				g.setFont(fnt);
-				Font fnt2 = new Font("arial", 1, 30);
-				g.setColor(Color.white);
-				g.drawString("Planeti Jupiter", 150, 70);
-				g.setFont(fnt3);
-				g.drawString("Numri i hënave: 63", 15, 150);
-				g.drawString("Diametri: 142.984 (±8) km (ekuator)", 15, 200);
-				g.drawString("Siperfaqja: 1/15,41", 15, 250);
-				g.drawString("Masa: 1,899×1027kg", 15, 300);
-				
-			     
+				g.drawString("Ju Fituat. Piket e tua: " + (hud.getScore() + ((hud.getPlanet()-1)*100)), 30, 150);
 				
 				
-				
-				g.setFont(fnt);
-				
-				g.setColor(Color.white);
-				//g.drawString("Game Over", 300, 300);
-				g.setFont(fnt3);
-				g.drawString("Ju Fituat. Piket e tua: " + (hud.getScore() + ((hud.getPlanet()-1)*100)), 325, 325);
-				
-				
-				
-						
 				
 				g.setFont(fnt2);
 				g.setColor(Color.white);
@@ -340,7 +301,215 @@ public class Menu extends MouseAdapter{
 				g.setColor(Color.white);
 				g.drawRect(350, 350,200, 64);
 			}
+			
 		
+		}else if(loja.gameState == STATE.Niveli){
+			Font fnt = new Font("arial", 1, 50);
+			Font fnt3 = new Font("arial", 1, 20);
+			
+			if(hud.getPlanet() == 1) {
+				Font fnt1 = new Font("arial", 1, 30);
+				Font fnt2 = new Font("arial", 1, 20);
+				
+				g.setFont(fnt1);
+				g.setColor(Color.white);
+				g.drawString("Cila eshte masa e planetit Mars?", 70, 70);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("6.4219e23 kg", 240, 190);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("5,685×1026 kg", 240, 290);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("1,899×1027kg", 240, 390);
+				
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 150,200, 64);
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 250,200, 64);
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 350,200, 64);
+			} else if(hud.getPlanet() == 2) {
+				Font fnt1 = new Font("arial", 1, 30);
+				Font fnt2 = new Font("arial", 1, 20);
+				
+				g.setFont(fnt1);
+				g.setColor(Color.white);
+				g.drawString("Cili eshte Diametri i Planetit Saturn", 70, 70);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("6,794 km", 270, 190);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("120.536 km", 260, 290);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("142.984 km", 260, 390);
+				
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 150,200, 64);
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 250,200, 64);
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 350,200, 64);
+			}else if(hud.getPlanet() == 3) {
+				Font fnt1 = new Font("arial", 1, 30);
+				Font fnt2 = new Font("arial", 1, 20);
+				
+				g.setFont(fnt1);
+				g.setColor(Color.white);
+				g.drawString("Sa hena ka planeti Jupiter", 70, 70);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("60", 300, 190);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("61", 300, 290);
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("63", 300, 390);
+				
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 150,200, 64);
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 250,200, 64);
+				
+				g.setColor(Color.white);
+				g.drawRect(210, 350,200, 64);
+			}
+		
+		}else if(loja.gameState == STATE.Pergjigja){
+			if(hud.getPlanet() != 3) {
+				Font fnt = new Font("arial", 1, 30);
+				Font fnt3 = new Font("arial", 1, 15);
+				g.setFont(fnt);
+				Font fnt2 = new Font("arial", 1, 20);
+				g.setColor(Color.white);
+				g.drawString("Bravo", 270, 50);
+				g.setFont(fnt);
+				g.drawString("Ju e gjetet. Piket e jetes u shtuan me 50 ", 30, 100);
+				if(hud.getPlanet() == 2) {
+					g.setFont(fnt);
+					g.setColor(Color.white);
+					g.drawString("Planeti Saturn", 220, 170);
+					g.setFont(fnt3);
+					g.drawString("Numri i hënave: 61", 15, 250);
+					g.drawString("Diametri:	120.536 ±8 km (ekuator)", 15, 300);
+					g.drawString("Sipërfaqja: 1 / 10,21", 15, 350);
+					g.drawString("Masa: 5,685×1026 kg", 15, 400);
+
+				}else if(hud.getPlanet() == 1) {
+					g.setFont(fnt);
+					g.setColor(Color.white);
+					g.drawString("Planeti Mars", 230, 170);
+					g.setFont(fnt3);
+					g.drawString("Distanca: 227,940,000 km (1.52 AU) Nga Dielli", 15, 250);
+					g.drawString("Distanca: 58.000.000 Km deri ne 402.000.000 km nga Toka", 15, 300);
+					g.drawString("Diametri: 6,794 km", 15, 350);
+					g.drawString("Masa: 6.4219e23 kg", 15, 400);
+
+				}
+				
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("Vazhdo", 415, 390);
+				g.setColor(Color.white);
+				g.drawRect(350, 350,200, 64);
+			}else {
+				Font fnt = new Font("arial", 1, 30);
+				Font fnt3 = new Font("arial", 1, 15);
+				g.setFont(fnt);
+				Font fnt2 = new Font("arial", 1, 20);
+				g.setColor(Color.white);
+				g.drawString("Bravo", 270, 50);
+				g.setFont(fnt);
+				g.drawString("Ju e gjetet. Piket e tua u shtuan me 50 ", 30, 100);
+				
+				g.setFont(fnt);
+				g.setColor(Color.white);
+				g.drawString("Planeti Jupiter", 230, 170);
+				g.setFont(fnt3);
+				g.drawString("Numri i hënave: 63", 15, 250);
+				g.drawString("Diametri: 142.984 (±8) km (ekuator)", 15, 300);
+				g.drawString("Siperfaqja: 1/15,41", 15, 350);
+				g.drawString("Masa: 1,899×1027kg", 15, 400);
+				
+				
+				
+				g.setFont(fnt2);
+				g.setColor(Color.white);
+				g.drawString("Vazhdo", 415, 390);
+				g.setColor(Color.white);
+				g.drawRect(350, 350,200, 64);
+			}
+		}else if(loja.gameState == STATE.Pergjigja_gabuar){
+
+			Font fnt = new Font("arial", 1, 30);
+			Font fnt3 = new Font("arial", 1, 15);
+			g.setFont(fnt);
+			Font fnt2 = new Font("arial", 1, 20);
+			g.setColor(Color.white);
+			g.drawString("Gabim", 270, 50);
+			g.setFont(fnt);
+			g.drawString("Ju nuk e gjetet pergjigjen ", 125, 100);
+			if(hud.getPlanet() == 2) {
+				g.setFont(fnt);
+				g.setColor(Color.white);
+				g.drawString("Planeti Saturn", 220, 170);
+				g.setFont(fnt3);
+				g.drawString("Numri i hënave: 61", 15, 250);
+				g.drawString("Diametri:	120.536 ±8 km (ekuator)", 15, 300);
+				g.drawString("Sipërfaqja: 1 / 10,21", 15, 350);
+				g.drawString("Masa: 5,685×1026 kg", 15, 400);
+
+			}else if(hud.getPlanet() == 1) {
+				g.setFont(fnt);
+				g.setColor(Color.white);
+				g.drawString("Planeti Mars", 230, 170);
+				g.setFont(fnt3);
+				g.drawString("Distanca: 227,940,000 km (1.52 AU) Nga Dielli", 15, 250);
+				g.drawString("Distanca: 58.000.000 Km deri ne 402.000.000 km nga Toka", 15, 300);
+				g.drawString("Diametri: 6,794 km", 15, 350);
+				g.drawString("Masa: 6.4219e23 kg", 15, 400);
+
+			}else if(hud.getPlanet() == 3) {
+				g.setFont(fnt);
+				g.setColor(Color.white);
+				g.drawString("Planeti Jupiter", 230, 170);
+				g.setFont(fnt3);
+				g.drawString("Numri i hënave: 63", 15, 250);
+				g.drawString("Diametri: 142.984 (±8) km (ekuator)", 15, 300);
+				g.drawString("Siperfaqja: 1/15,41", 15, 350);
+				g.drawString("Masa: 1,899×1027kg", 15, 400);
+			}
+			
+			
+			g.setFont(fnt2);
+			g.setColor(Color.white);
+			g.drawString("Vazhdo", 415, 390);
+			g.setColor(Color.white);
+			g.drawRect(350, 350,200, 64);
+
+			
 		}
 		
 	}

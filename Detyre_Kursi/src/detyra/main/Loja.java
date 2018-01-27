@@ -42,8 +42,10 @@ public class Loja extends Canvas implements Runnable{
 		Ndihme,
 		Select,
 		Fund,
+		
 		Niveli,
-		Fitore,
+		Pergjigja,
+		Pergjigja_gabuar,
 		Loja,
 	};
 	public static STATE gameState = STATE.Menu;
@@ -159,6 +161,8 @@ public class Loja extends Canvas implements Runnable{
 					handler.clearNiveli();
 					gameState = STATE.Niveli;
 					
+					
+					
 									
 				}/*else if(gameState == STATE.Fitore){
 					handler.tick();
@@ -166,7 +170,7 @@ public class Loja extends Canvas implements Runnable{
 				}*/
 			}
 			
-		}else if(gameState == STATE.Menu || gameState == STATE.Niveli || gameState == STATE.Fund || gameState == STATE.Select) {
+		}else if(gameState == STATE.Menu || gameState == STATE.Niveli || gameState == STATE.Fund || gameState == STATE.Pergjigja || gameState == STATE.Pergjigja_gabuar || gameState == STATE.Select) {
 			menu.tick();
 			handler.tick();
 			handler.clearFitore();
@@ -183,7 +187,7 @@ public class Loja extends Canvas implements Runnable{
 		
 		Graphics g = bs.getDrawGraphics();
 
-		//g.setColor(Color.black);
+		g.setColor(Color.black);
 		g.fillRect((int)0,(int)0,WIDTH,HEIGHT);
 		
 		
@@ -193,7 +197,7 @@ public class Loja extends Canvas implements Runnable{
 		
 		if(gameState == STATE.Loja) {
 			hud.render(g);
-		}else if(gameState == STATE.Menu || gameState == STATE.Ndihme|| gameState == STATE.Niveli|| gameState == STATE.Fund|| gameState == STATE.Select) {
+		}else if(gameState == STATE.Menu || gameState == STATE.Ndihme|| gameState == STATE.Niveli || gameState == STATE.Pergjigja || gameState == STATE.Pergjigja_gabuar || gameState == STATE.Fund|| gameState == STATE.Select) {
 			menu.render(g);
 		}
 		if(paused) {
